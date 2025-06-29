@@ -3,20 +3,22 @@ import axios from "axios";
 
 export default function Header() {
   const navigate = useNavigate();
+  const API = import.meta.env.VITE_API_URL;
+
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost/gestionale_lotteria/backend/api/logout.php", {}, {
+      await axios.post(`${API}/backend/api/logout.php`, {}, {
         withCredentials: true
       });
 
-      // Dopo il logout, rimuovi eventuali dati locali
       localStorage.removeItem("loggedInUser");
       navigate("/");
     } catch (error) {
       console.error("Errore durante il logout", error);
     }
   };
+
 
   return (
     <nav className="navbar bg-body-tertiary">

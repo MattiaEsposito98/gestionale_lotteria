@@ -3,6 +3,8 @@ import axios from "axios";
 
 export default function HomePage() {
   const [numeri, setNumeri] = useState([]);
+  const API = import.meta.env.VITE_API_URL;
+
 
   useEffect(() => {
     fetchNumeri();
@@ -10,7 +12,7 @@ export default function HomePage() {
 
   const fetchNumeri = async () => {
     try {
-      const res = await axios.get("http://localhost/gestionale_lotteria/backend/get_numeri.php");
+      const res = await axios.get(`${API}/get_numeri.php`);
       console.log("📦 Risposta:", res.data);
       setNumeri(res.data);
     } catch (err) {
@@ -23,7 +25,7 @@ export default function HomePage() {
     if (!nome) return;
 
     try {
-      const res = await axios.post("http://localhost/gestionale_lotteria/backend/assegna_numero.php", {
+      const res = await axios.post(`${API}/assegna_numero.php`, {
         numero,
         utente_nome: nome,
       });

@@ -6,6 +6,8 @@ export default function Login() {
   const [password, setPassword] = useState("");        // <-- stringa
   const [showPassword, setShowPassword] = useState(false); // <-- nuovo stato per l’occhio
   const [error, setError] = useState("");
+  const API = import.meta.env.VITE_API_URL;
+
 
 
   const handleLogin = async (e) => {
@@ -14,10 +16,11 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost/gestionale_lotteria/backend/api/login.php",
+        `${API}/backend/api/login.php`,
         { username, password },
         { withCredentials: true }
       );
+
 
       if (response.data.success) {
         localStorage.setItem("loggedIn", "true");
