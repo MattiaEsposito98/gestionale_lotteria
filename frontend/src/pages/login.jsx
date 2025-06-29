@@ -16,7 +16,7 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        `${API}/backend/api/login.php`,
+        `${API}/api/login.php`,
         { username, password },
         { withCredentials: true }
       );

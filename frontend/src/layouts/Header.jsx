@@ -16,7 +16,7 @@ export default function Header() {
   };
 
   const handleExport = () => {
-    window.open(`${API}/backend/export_excel.php`, "_blank");
+    window.open(`${API}/export_excel.php`, "_blank");
   };
 
   return (

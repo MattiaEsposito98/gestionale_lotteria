@@ -5,9 +5,11 @@ import axios from "axios";
 export default function ProtectedRoute({ children }) {
   const [checking, setChecking] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const API = import.meta.env.VITE_API_URL;
+
 
   useEffect(() => {
-    axios.get("http://localhost/gestionale_lotteria/backend/api/check_session.php", {
+    axios.get(`${API}/api/check_session.php`, {
       withCredentials: true
     })
       .then(res => {
