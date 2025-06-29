@@ -1,9 +1,19 @@
 <?php
 // backend/api/login.php
+
+// Headers CORS
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+
+// 🔁 Se è una richiesta preflight (OPTIONS), interrompi qui
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+  http_response_code(200);
+  exit;
+}
+
 
 session_start();
 require_once '../db.php';
@@ -21,7 +31,7 @@ if ($stmt->num_rows === 1) {
   $stmt->bind_result($id, $hash);
   $stmt->fetch();
 
-  if (password_verify($password, $hash)) {
+  if (hash('sha256', $password) === $hash) {
     $_SESSION["admin_id"] = $id;
     echo json_encode(["success" => true]);
     exit;
