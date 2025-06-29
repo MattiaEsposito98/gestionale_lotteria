@@ -13,7 +13,6 @@ export default function HomePage() {
   const fetchNumeri = async () => {
     try {
       const res = await axios.get(`${API}/get_numeri.php`);
-      console.log("📦 Risposta:", res.data);
       setNumeri(res.data);
     } catch (err) {
       console.error("Errore nel caricamento dei numeri", err);
