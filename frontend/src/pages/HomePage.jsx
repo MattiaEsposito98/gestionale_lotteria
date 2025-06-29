@@ -57,14 +57,19 @@ export default function HomePage() {
 
         cols.push(
           <div key={num} className="d-inline-block mx-2 my-1">
-            <div
-              className={`ball ${assegnato ? 'ball-red' : 'ball-blue'}`}
-              title={assegnato ? `Assegnato a: ${nomeUtente}` : "Clicca per assegnare"}
-              onClick={() => !assegnato && handleAssign(num)}
-            >
-              {num}
+            <div className="ball-wrapper">
+              <div
+                className={`ball ${assegnato ? 'ball-red' : 'ball-blue'}`}
+                onClick={() => !assegnato && handleAssign(num)}
+              >
+                {num}
+              </div>
+              {assegnato && (
+                <div className="tooltip-custom">Assegnato a: {nomeUtente}</div>
+              )}
             </div>
           </div>
+
         );
       }
 

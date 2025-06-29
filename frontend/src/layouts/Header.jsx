@@ -5,20 +5,19 @@ export default function Header() {
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API_URL;
 
-
   const handleLogout = async () => {
     try {
-      await axios.post(`${API}/backend/api/logout.php`, {}, {
-        withCredentials: true
-      });
-
-      localStorage.removeItem("loggedInUser");
+      await axios.post(`${API}/api/logout.php`, {}, { withCredentials: true });
+      localStorage.removeItem("loggedIn");
       navigate("/");
     } catch (error) {
       console.error("Errore durante il logout", error);
     }
   };
 
+  const handleExport = () => {
+    window.open(`${API}/backend/export_excel.php`, "_blank");
+  };
 
   return (
     <nav className="navbar bg-body-tertiary">
@@ -32,9 +31,14 @@ export default function Header() {
           />
         </a>
 
-        <button className="btn btn-outline-danger" onClick={handleLogout}>
-          Logout
-        </button>
+        <div className="d-flex gap-2">
+          <button className="btn btn-success" onClick={handleExport}>
+            Export Excel
+          </button>
+          <button className="btn btn-outline-danger" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
     </nav>
   );

@@ -24,3 +24,32 @@
   background-color: #dc3545;
   cursor: not-allowed;
 }
+
+.ball-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-custom {
+  visibility: hidden;
+  width: max-content;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 10;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.ball-wrapper:hover .tooltip-custom {
+  visibility: visible;
+  opacity: 1;
+}
+
