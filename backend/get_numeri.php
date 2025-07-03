@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Content-Type: application/json"); // <-- spostata qui
+header("Content-Type: application/json");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   http_response_code(200);
@@ -23,7 +23,8 @@ for ($i = 1; $i <= 90; $i++) {
 
 // Preleva quelli già assegnati dal DB
 $sql = "
-  SELECT n.numero, n.utente_id, u.nome_utente AS nome_utente
+  SELECT n.numero, n.utente_id, 
+         CONCAT(u.nome, ' ', u.cognome) AS nome_utente
   FROM numeri n
   LEFT JOIN utenti u ON n.utente_id = u.id
 ";

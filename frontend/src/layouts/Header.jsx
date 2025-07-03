@@ -24,7 +24,7 @@ export default function Header() {
       <div className="container">
         <a className="navbar-brand" href="#">
           <img
-            src="public/Lotteria.jpg"
+            src="/Lotteria.jpg"
             alt="Lotteria Mida"
             width="60"
             height="60"

@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Modal, Button, Form } from 'react-bootstrap';
+
 
 export default function HomePage() {
   const [numeri, setNumeri] = useState([]);
   const API = import.meta.env.VITE_API_URL;
-
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    numero: null,
+    nome: '',
+    cognome: '',
+    data_nascita: '',
+    nickname: '',
+    email: '',
+    cell: ''
+  });
 
   useEffect(() => {
     fetchNumeri();
@@ -19,19 +30,58 @@ export default function HomePage() {
     }
   };
 
-  const handleAssign = async (numero) => {
-    const nome = prompt(`Inserisci il nome dell'utente per il numero ${numero}`);
-    if (!nome) return;
+
+  // APRE LA MODALE
+  const openAssignModal = (numero, info = {}) => {
+    setFormData({
+      numero,
+      nome: info.nome || '',
+      cognome: info.cognome || '',
+      data_nascita: info.data_nascita || '',
+      nickname: info.nickname || '',
+      email: info.email || '',
+      cell: info.cell || ''
+    });
+    setShowModal(true);
+  };
+
+
+  // INVIA I DATI
+  const handleFormSubmit = async () => {
+    const { numero, nome, cognome, data_nascita, nickname, email, cell } = formData;
+
+    if (!nome || !cognome) {
+      alert("Nome e cognome sono obbligatori");
+      return;
+    }
 
     try {
-      const res = await axios.post(`${API}/assegna_numero.php`, {
+      console.log("Invio:", {
         numero,
-        utente_nome: nome,
+        nome,
+        cognome,
+        data_nascita,
+        nickname,
+        email,
+        cell
+      });
+
+      const res = await axios.post(`${API}assegna_numero.php`, {
+        numero,
+        nome,
+        cognome,
+        data_nascita,
+        nickname,
+        email,
+        cell
+      }, {
+        headers: { 'Content-Type': 'application/json' }
       });
 
       if (res.data.status === "ok") {
         alert("Numero assegnato!");
-        fetchNumeri(); // aggiorna lo stato
+        setShowModal(false);
+        fetchNumeri();
       } else {
         alert(res.data.error || "Errore durante l'assegnazione");
       }
@@ -40,6 +90,9 @@ export default function HomePage() {
       alert("Errore durante l'assegnazione");
     }
   };
+
+
+
 
   const renderBalls = () => {
     if (!Array.isArray(numeri)) return null;
@@ -60,7 +113,7 @@ export default function HomePage() {
             <div className="ball-wrapper">
               <div
                 className={`ball ${assegnato ? 'ball-red' : 'ball-blue'}`}
-                onClick={() => !assegnato && handleAssign(num)}
+                onClick={() => openAssignModal(num, info)}
               >
                 {num}
               </div>
@@ -88,6 +141,31 @@ export default function HomePage() {
     <div className="container py-4">
       <h2 className="text-center mb-4">Numeri disponibili</h2>
       {renderBalls()}
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Assegna numero {formData.numero}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            {["nome", "cognome", "data_nascita", "nickname", "email", "cell"].map(field => (
+              <Form.Group key={field} className="mb-3">
+                <Form.Label>{field.replace('_', ' ').toUpperCase()}</Form.Label>
+                <Form.Control
+                  type={field === "data_nascita" ? "date" : "text"}
+                  value={formData[field]}
+                  onChange={e => setFormData({ ...formData, [field]: e.target.value })}
+                />
+              </Form.Group>
+            ))}
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Annulla</Button>
+          <Button variant="primary" onClick={handleFormSubmit}>Assegna</Button>
+        </Modal.Footer>
+      </Modal>
+
     </div>
   );
 }
