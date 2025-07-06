@@ -15,29 +15,26 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 if (!$data) {
   http_response_code(400);
-  echo json_encode(["error" => "Nessun dato ricevuto", "raw" => file_get_contents("php://input")]);
+  echo json_encode(["error" => "Nessun dato ricevuto"]);
   exit();
 }
-// Verifica che nome e cognome siano presenti
+
 if (!isset($data["numero"]) || trim($data["nome"]) === '' || trim($data["cognome"]) === '') {
   http_response_code(400);
   echo json_encode(["error" => "Dati obbligatori mancanti (numero, nome o cognome)"]);
   exit();
 }
 
-// Campi obbligatori
 $numero = intval($data["numero"]);
 $nome = trim($data["nome"]);
 $cognome = trim($data["cognome"]);
 
-// Campi facoltativi
 $data_nascita = isset($data["data_nascita"]) && trim($data["data_nascita"]) !== '' ? trim($data["data_nascita"]) : null;
 $nickname = isset($data["nickname"]) && trim($data["nickname"]) !== '' ? trim($data["nickname"]) : null;
 $email = isset($data["email"]) && trim($data["email"]) !== '' ? trim($data["email"]) : null;
 $cell = isset($data["cell"]) && trim($data["cell"]) !== '' ? trim($data["cell"]) : null;
 
-
-// Cerca se l'utente esiste già (per nome e cognome)
+// Cerca se l'utente esiste già
 $stmt = $conn->prepare("SELECT id FROM utenti WHERE nome = ? AND cognome = ?");
 $stmt->bind_param("ss", $nome, $cognome);
 $stmt->execute();
@@ -45,9 +42,21 @@ $result = $stmt->get_result();
 
 if ($row = $result->fetch_assoc()) {
   $utente_id = $row["id"];
+
+  // Aggiorna i dati dell'utente esistente
+  $updateUser = $conn->prepare("
+    UPDATE utenti 
+    SET data_nascita = ?, nickname = ?, email = ?, cell = ?
+    WHERE id = ?
+  ");
+  $updateUser->bind_param("ssssi", $data_nascita, $nickname, $email, $cell, $utente_id);
+  $updateUser->execute();
 } else {
-  // Inserisce nuovo utente
-  $insert = $conn->prepare("INSERT INTO utenti (nome, cognome, data_nascita, nickname, email, cell) VALUES (?, ?, ?, ?, ?, ?)");
+  // Inserisce un nuovo utente
+  $insert = $conn->prepare("
+    INSERT INTO utenti (nome, cognome, data_nascita, nickname, email, cell)
+    VALUES (?, ?, ?, ?, ?, ?)
+  ");
   $insert->bind_param("ssssss", $nome, $cognome, $data_nascita, $nickname, $email, $cell);
   if (!$insert->execute()) {
     http_response_code(500);

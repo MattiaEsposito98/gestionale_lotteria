@@ -17,14 +17,28 @@ for ($i = 1; $i <= 90; $i++) {
   $numeri[$i] = [
     "numero" => $i,
     "utente_id" => null,
+    "nome" => null,
+    "cognome" => null,
+    "data_nascita" => null,
+    "nickname" => null,
+    "email" => null,
+    "cell" => null,
     "nome_utente" => null
   ];
 }
 
 // Preleva quelli già assegnati dal DB
 $sql = "
-  SELECT n.numero, n.utente_id, 
-         CONCAT(u.nome, ' ', u.cognome) AS nome_utente
+  SELECT 
+    n.numero,
+    n.utente_id,
+    u.nome,
+    u.cognome,
+    u.data_nascita,
+    u.nickname,
+    u.email,
+    u.cell,
+    CONCAT(u.nome, ' ', u.cognome) AS nome_utente
   FROM numeri n
   LEFT JOIN utenti u ON n.utente_id = u.id
 ";
