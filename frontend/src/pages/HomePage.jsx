@@ -3,6 +3,7 @@ import axios from "axios";
 import { Modal, Button, Form } from 'react-bootstrap';
 import Countdown from "../components/CountDown";
 import Goals from "../components/Goals";
+import Goals2 from "../components/Goals2";
 
 
 
@@ -144,6 +145,8 @@ export default function HomePage() {
     <div className="container py-4 position-relative">
       <Countdown numeri={numeri} />
       <Goals numeri={numeri} />
+      <Goals2 numeri={numeri} />
+
       <h2 className="text-center mb-4">Numeri disponibili</h2>
       {renderBalls()}
 
